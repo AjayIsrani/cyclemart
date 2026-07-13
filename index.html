@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cycle Mart - Review Assistant</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-align: center; padding: 25px 15px; background: #eef2f7; color: #1e293b; }
+        .card { background: white; padding: 30px 20px; border-radius: 24px; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08); max-width: 440px; margin: auto; border-top: 10px solid #0056b3; }
+        .logo-area { font-size: 52px; margin-bottom: 5px; }
+        .shop-title { font-size: 28px; font-weight: 800; color: #0056b3; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tagline { font-size: 11px; font-weight: bold; color: #dc2626; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
+        .stars { color: #f59e0b; font-size: 22px; margin-bottom: 15px; }
+        p { color: #64748b; font-size: 14px; margin-bottom: 25px; line-height: 1.5; padding: 0 10px; }
+        .review-box { background: #f8fafc; padding: 20px; border-radius: 16px; border: 2px dashed #cbd5e1; font-style: italic; min-height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 15px; color: #334155; line-height: 1.6; text-align: left; }
+        .btn-copy { background: #dc2626; color: white; border: none; padding: 16px 30px; font-size: 16px; font-weight: bold; border-radius: 14px; cursor: pointer; width: 100%; transition: background 0.2s, transform 0.1s; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); margin-bottom: 14px; }
+        .btn-copy:active { background: #b91c1c; transform: scale(0.98); }
+        .btn-refresh { background: transparent; color: #475569; border: 2px solid #cbd5e1; padding: 12px 20px; font-size: 14px; font-weight: 600; border-radius: 14px; cursor: pointer; width: 100%; transition: all 0.2s; }
+        .btn-refresh:hover { background: #e2e8f0; color: #0f172a; }
+        .footer { font-size: 11px; color: #94a3b8; margin-top: 25px; border-top: 1px solid #e2e8f0; padding-top: 15px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="logo-area">🚴‍♂️</div>
+    <div class="shop-title">Cycle Mart</div>
+    <div class="tagline">Bicycle • Tricycle • Accessories • Magic Car • Baby Walker</div>
+    <div class="stars">⭐⭐⭐⭐⭐</div>
+    <p>We generated a unique text suggestion for your 5-star review. Tap copy to save it and paste it on Google Maps!</p>
+    
+    <div class="review-box" id="reviewText">Loading your review text...</div>
+    
+    <button class="btn-copy" onclick="copyAndRedirect()">Copy Text & Open Google</button>
+    <button class="btn-refresh" onclick="setNewReview()">🔄 Change Text Suggestion</button>
+    
+    <div class="footer">
+        <strong>Cycle Mart</strong> • Raiya Road, Rajkot<br>
+        Proprietor: Hargovind Israni
+    </div>
+</div>
+
+<script>
+    const googleReviewLink = "https://share.google";
+
+    // Openings
+    const openings = [
+        "Fantastic experience visiting Cycle Mart on Raiya Road today!",
+        "Hands down the best bicycle shop in Rajkot.",
+        "Super happy with the cycle options at this showroom.",
+        "Highly impressed by the collection at Cycle Mart.",
+        "Excellent showroom with premium brands and options.",
+        "The absolute best bicycle store for families in Rajkot.",
+        "Had an amazing experience shopping for accessories here.",
+        "The best bicycle showroom near Janta Dairy by far.",
+        "This store is an absolute paradise for bike lovers.",
+        "Incredible support and vast range of cycles here.",
+        "By far the friendliest multi-brand cycle retail store.",
+        "The perfect store for both kids and adult bicycle buyers.",
+        "Wonderful hospitality and clear guidance from the owner, Hargovind Bhai.",
+        "Exceeded all my expectations regarding stock and variants.",
+        "Very well organized showroom with a great ambiance.",
+        "Top-notch bicycle dealer with highly skilled workers.",
+        "My ultimate go-to spot for bike maintenance and upgrades.",
+        "Super clean showroom with very well-displayed models.",
+        "Outstanding customer journey from entry to purchase.",
+        "Extremely reliable and honest dealing at this store!"
+    ];
+
+    // Middle phrases - Now customized with your exact card brands!
+    const bodies = [
+        "They have a massive selection of Hero and Hercules cycles.",
+        "Great collection of premium Harlan and Avon bicycles to choose from.",
+        "Found the perfect range of Momstar Bikes for kids here.",
+        "They have a massive selection of bicycles, tricycles, and baby walkers.",
+        "The staff is super cooperative and helped me test ride multiple gears.",
+        "Their technicians are brilliant and fixed my chain alignment instantly.",
+        "Very premium collection of multi-speed mountain bikes and hybrids.",
+        "The pricing here is extremely reasonable and matches your budget.",
+        "They gave me clear explanations on frame sizing and safety features.",
+        "Excellent options for toddlers, including magic cars and tricycles.",
+        "The mechanics solved my gear shifting issues smoothly and quickly.",
+        "They have genuine spare parts and high-quality safety helmets.",
+        "The delivery processing and overall fitting work were spot on.",
+        "The variety of premium cycle accessories available is incredible.",
+        "Highly impressed by their helpful behavior and zero-pressure sales approach.",
+        "They helped me fit a beautiful customized accessory kit onto my new ride.",
+        "Totally transparent pricing with no hidden charges for fitting.",
+        "The showroom layouts make it very easy to compare different brands.",
+        "They adjusted the suspension system and brake pads perfectly for me.",
+        "They have fantastic offers on premium sports and fitness cycles."
+    ];
+
+    // Closings
+    const closings = [
+        "Highly recommend Cycle Mart to everyone in town!",
+        "Will definitely come back for all future cycle servicing.",
+        "If you want premium cycles or repairs, go straight here.",
+        "Five stars for the quick process and great buying experience!",
+        "Keep up the great customer service, team!",
+        "I'll be sending my entire family here for their next purchase.",
+        "Definite 5-star rating for their genuine guidance and support.",
+        "Will surely return when it's time to upgrade my gear.",
+        "Best post-sales support I have ever experienced.",
+        "Don't look anywhere else if you want a reliable cycle dealer.",
+        "They have earned a customer for life with this level of service.",
+        "Extremely satisfied with the purchase, totally value for money!",
+        "Can't wait to hit the roads with my newly tuned cycle!",
+        "An absolute asset for bicycle buyers across Rajkot.",
+        "Completely satisfied with the behavior, check them out today!",
+        "The gold standard for premium multi-brand cycle showrooms.",
+        "Big thanks to the team for helping me pick the ideal bicycle.",
+        "They deserve full marks for handling customers so gracefully.",
+        "Flawless and smooth transaction process, highly recommended.",
+        "Overall a wonderful, transparent, and pleasant purchase experience."
+    ];
+
+    let currentReview = "";
+
+    function generateRandomReview() {
+        const randOpen = openings[Math.floor(Math.random() * openings.length)];
+        const randBody = bodies[Math.floor(Math.random() * bodies.length)];
+        const randClose = closings[Math.floor(Math.random() * closings.length)];
+        return `${randOpen} ${randBody} ${randClose}`;
+    }
+
+    function setNewReview() {
+        currentReview = generateRandomReview();
+        document.getElementById("reviewText").innerText = `"${currentReview}"`;
+    }
+
+    setNewReview();
+
+    function copyAndRedirect() {
+        navigator.clipboard.writeText(currentReview).then(() => {
+            alert("Review text copied! Paste it in the Google review box that opens next.");
+            window.location.href = googleReviewLink;
+        }).catch(err => {
+            window.location.href = googleReviewLink;
+        });
+    }
+</script>
+
+</body>
+</html>
